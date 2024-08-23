@@ -1,0 +1,40 @@
+body {
+  font-family: Arial, sans-serif;
+}
+body h2 {
+  color: #488fbe;
+}
+
+.weather-forecasts .weather-forecast {
+  margin: 30px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #47a053;
+}
+.weather-forecasts .weather-forecast h2 {
+  color: #be48b8;
+}
+.weather-forecasts .weather-forecast .date {
+  color: #99b33c;
+}
+.weather-forecasts .weather-forecast .date:hover {
+  color: #286ba1;
+}
+.weather-forecasts .weather-forecast .temp {
+  color: #fd0000;
+}
+.weather-forecasts .weather-forecast .temp:hover {
+  color: #286ba1;
+}
+.weather-forecasts .weather-forecast .summary {
+  color: #286ba1;
+}
+.weather-forecasts .weather-forecast .summary:hover {
+  color: #fd0000;
+}
+.weather-forecasts .weather-forecast.selected {
+  background-color: #8dfd9c;
+}
+
+/*# sourceMappingURL=style.css.map */

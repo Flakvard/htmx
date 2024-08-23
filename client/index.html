@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://unpkg.com/htmx.org@1.6.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="client.js"></script>
+</head>
+<body>
+    <div class="weather-forecast" hx-get="http://localhost:5146/weatherforecast" hx-trigger="load" hx-target="#forecast">
+        <h2>Weather Forecast</h2>
+        <div id="forecast">
+            <!-- Weather data will be loaded here -->
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+// styles.scss
+body {
+    font-family: Arial, sans-serif;
+
+    h2 {
+        color: #488fbe;
+    }
+}
+
+.weather-forecasts {
+    .weather-forecast {
+        h2 {
+            color: #be48b8;
+        }
+
+        margin: 30px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #47a053; // Change this to your desired color
+
+        .date {
+            color: #99b33c;
+
+            &:hover {
+                color: #286ba1;
+            }
+        }
+
+        .temp {
+            color: #fd0000;
+
+            &:hover {
+                color: #286ba1;
+            }
+        }
+
+        .summary {
+            color: #286ba1;
+
+            &:hover {
+                color: #fd0000;
+            }
+        }
+
+        &.selected {
+            background-color: #8dfd9c; // Change this to your desired color
+        }
+    }
+}
