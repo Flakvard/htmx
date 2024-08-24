@@ -1,3 +1,5 @@
+using server;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -34,5 +36,8 @@ app.UseCors("AllowAllOrigins");
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Seed the weather forecasts
+WeatherForecastDb.SeedWeatherForecasts();
 
 app.Run();
