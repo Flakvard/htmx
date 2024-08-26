@@ -48,7 +48,9 @@ public class WeatherForecastController : ControllerBase
         var forecasts = WeatherForecastDb.GetWeatherForecasts();
         if (Id == null || !Id.Any())
         {
-            return Content("No order provided", "text/html");
+            var returnForecasts = WeatherForecastDb.GetWeatherForecasts();
+            var sameHTML = WeatherForecastDb.GetHTMLForecastLoop(returnForecasts);
+            return Content(sameHTML, "text/html");
         }
 
         var orderedForecasts = WeatherForecastDb.OrderWeatherForecasts(Id, forecasts);

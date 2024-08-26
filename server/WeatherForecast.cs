@@ -102,16 +102,17 @@ public static class WeatherForecastDb
     public static string GetHTMLForForecast(List<WeatherForecast> forecasts)
     {
         var html = "<div id='weather-forecasts' class='col rounded border border-1 p-5 m-3 justify-content-center'>";
+        html += $"<form class='sortable' "+
+                $"hx-post='http://localhost:5146/weatherforecast/order' " +
+                $"hx-trigger='end'> ";
         html += GetHTMLForecastLoop(forecasts);
+        html += "</form>";
         html += "</div>";
         return html;
     }
     public static string GetHTMLForecastLoop(List<WeatherForecast> forecasts)
     {
-        var html = $"<form class='sortable' "+
-                $"hx-post='http://localhost:5146/weatherforecast/order' " +
-                $"hx-trigger='end'> " +
-                $"<div class='htmx-indicator'>Loading...</div>";
+        var html = $"<div class='htmx-indicator'>Loading...</div>";
         foreach (var forecast in forecasts)
         {
             html += "<div class='row m-1 p-3 border-1'>";
@@ -127,7 +128,6 @@ public static class WeatherForecastDb
                     $"</div>";
             html += "</div>";
         }
-        html += "</form>";
         return html;
     }
     public static string GetHTMLForecast(WeatherForecast forecast)

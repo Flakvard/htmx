@@ -15,19 +15,7 @@ htmx.onLoad(function (content) {
 
       // Disable sorting on the `end` event
       onEnd: function (evt) {
-        var currentIds = Array.from(sortable.querySelectorAll("[data-id]")).map(
-          (el) => el.getAttribute("data-id")
-        );
-        var missingIds = originalIds.filter((id) => !currentIds.includes(id));
-
-        if (missingIds.length > 0) {
-          alert("Error: Some rows are missing. Please try again.");
-          this.option("disabled", false);
-        } else {
-          this.option("disabled", true);
-          // Trigger the form submission
-          htmx.trigger(sortable, "submit");
-        }
+        this.option("disabled", true);
       },
     });
 
