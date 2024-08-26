@@ -18,20 +18,7 @@ public class WeatherForecastController : ControllerBase
     {
         var forecasts = WeatherForecastDb.GetWeatherForecasts();
 
-        var html = "<div class='weather-forecasts'>";
-        foreach (var forecast in forecasts)
-        {
-            html += $"<div class='weather-forecast {(forecast.Selected ? "selected" : "")}' data-id='{forecast.Id}' " +
-                    $"hx-put='http://localhost:5146/weatherforecast/{forecast.Id}' " +
-                    $"hx-trigger='click' " +
-                    $"hx-swap='outerHTML'>" +
-                    $"<p class='date'>Date: {forecast.Date}</p>" +
-                    $"<p class='temp'>Temperature: {forecast.TemperatureC}°C</p>" +
-                    $"<p class='summary'>Summary: {forecast.Summary}</p>" +
-                    $"<p class='selected'>Selected: {forecast.Selected}</p>" +
-                    $"</div>";
-        }
-        html += "</div>";
+        var html = WeatherForecastDb.GetHTMLForForecast(forecasts);
 
         return Content(html, "text/html");
     }
@@ -48,15 +35,7 @@ public class WeatherForecastController : ControllerBase
 
         WeatherForecastDb.UpdateWeatherForecast(existingForecast);
 
-        var updatedHtml = $"<div class='weather-forecast {(existingForecast.Selected ? "selected" : "")}' data-id='{existingForecast.Id}' " +
-                        $"hx-put='http://localhost:5146/weatherforecast/{existingForecast.Id}' " +
-                        $"hx-trigger='click' " +
-                        $"hx-swap='outerHTML'>" +
-                        $"<p class='date'>Date: {existingForecast.Date}</p>" +
-                        $"<p class='temp'>Temperature: {existingForecast.TemperatureC}°C</p>" +
-                        $"<p class='summary'>Summary: {existingForecast.Summary}</p>" +
-                        $"<p class='selected'>Selected: {existingForecast.Selected}</p>" +
-                        $"</div>";
+        var updatedHtml = WeatherForecastDb.GetHTMLForecastLoop(new List<WeatherForecast> { existingForecast });
 
         return Content(updatedHtml, "text/html");
     }
@@ -72,24 +51,11 @@ public class WeatherForecastController : ControllerBase
         }else{
             forecasts = WeatherForecastDb.SearchWeatherForecasts(search);
         }
-
-        var html = "<div class='weather-forecasts'>";
-        foreach (var forecast in forecasts)
-        {
-            html += $"<div class='weather-forecast {(forecast.Selected ? "selected" : "")}' data-id='{forecast.Id}' " +
-                    $"hx-put='http://localhost:5146/weatherforecast/{forecast.Id}' " +
-                    $"hx-trigger='click' " +
-                    $"hx-swap='outerHTML'>" +
-                    $"<p class='date'>Date: {forecast.Date}</p>" +
-                    $"<p class='temp'>Temperature: {forecast.TemperatureC}°C</p>" +
-                    $"<p class='summary'>Summary: {forecast.Summary}</p>" +
-                    $"<p class='selected'>Selected: {forecast.Selected}</p>" +
-                    $"</div>";
-        }
-        html += "</div>";
+        var html = WeatherForecastDb.GetHTMLForForecast(forecasts);
 
         return Content(html, "text/html");
     }
+        
 
 }
 

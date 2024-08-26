@@ -76,4 +76,31 @@ public static class WeatherForecastDb
             f.Selected.ToString().Contains(search)
         ).ToList();
     }
+    
+    public static string GetHTMLForForecast(List<WeatherForecast> forecasts)
+    {
+        var html = "<div id='weather-forecasts' class='col rounded border border-1 p-3 m-3'>";
+        html += "<div class='row'>";
+        html = GetHTMLForecastLoop(forecasts);
+        html += "</div>";
+        html += "</div>";
+        return html;
+    }
+    public static string GetHTMLForecastLoop(List<WeatherForecast> forecasts)
+    {
+        var html = "";
+        foreach (var forecast in forecasts)
+        {
+            html += $"<div id='weather-forecast' class='m-3 p-3 rounded shadow {(forecast.Selected ? "bg-success" : "bg-secondary")}' data-id='{forecast.Id}'" +
+                    $"hx-put='http://localhost:5146/weatherforecast/{forecast.Id}' " +
+                    $"hx-trigger='click' " +
+                    $"hx-swap='outerHTML'>" +
+                    $"<p class='date'>Date: {forecast.Date}</p>" +
+                    $"<p class='temp'>Temperature: {forecast.TemperatureC}°C</p>" +
+                    $"<p class='summary'>Summary: {forecast.Summary}</p>" +
+                    $"<p class='selected'>Selected: {forecast.Selected}</p>" +
+                    $"</div>";
+        }
+        return html;
+    }
 }
