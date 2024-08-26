@@ -22,6 +22,24 @@
   </head>
 
   <body>
+    <nav class="navbar bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand">Navbar</a>
+        <input
+          class="form-control me-2 d-flex"
+          type="search"
+          id="search"
+          name="search"
+          placeholder="Start typing to search..."
+          hx-post="http://localhost:5146/WeatherForecast/search/"
+          hx-trigger="input changed delay:300ms, search"
+          hx-target="#forecast"
+          hx-swap="innerHTML"
+          hx-indicator=".htmx-indicator"
+        />
+        <!-- <button class="btn btn-outline-success" type="submit">Search</button> -->
+      </div>
+    </nav>
     <div class="weather-forecast">
       <h2>Weather Forecast</h2>
       <div id="forecast">
@@ -30,7 +48,7 @@
     </div>
     <!-- button to add list of weather-forecast -->
     <button
-    class="btn btn-primary"
+      class="btn btn-primary"
       hx-get="http://localhost:5146/weatherforecast"
       hx-trigger="click"
       hx-target="#forecast"

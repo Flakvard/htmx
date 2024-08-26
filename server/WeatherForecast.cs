@@ -47,7 +47,7 @@ public static class WeatherForecastDb
     };
     public static void SeedWeatherForecasts()
     {
-        var forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        var forecasts = Enumerable.Range(1, 50).Select(index => new WeatherForecast
         {
             Id = Guid.NewGuid(),
             Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
@@ -64,5 +64,16 @@ public static class WeatherForecastDb
             TemperatureC = Random.Shared.Next(-20, 55),
             Summary = Summaries[Random.Shared.Next(Summaries.Length)]
         }).ToArray();
+    }
+    // Search for the weather forecast by any property
+    public static List<WeatherForecast> SearchWeatherForecasts(string search)
+    {
+        return WeatherForecasts.Where(f =>
+            f.Date.ToString().Contains(search) ||
+            f.TemperatureC.ToString().Contains(search) ||
+            f.TemperatureF.ToString().Contains(search) ||
+            f.Summary?.Contains(search) == true ||
+            f.Selected.ToString().Contains(search)
+        ).ToList();
     }
 }

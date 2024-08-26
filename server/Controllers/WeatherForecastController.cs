@@ -60,6 +60,36 @@ public class WeatherForecastController : ControllerBase
 
         return Content(updatedHtml, "text/html");
     }
+    // search for the weather forecast by any property
+    [HttpPost("search", Name = "SearchWeatherForecasts")]
+    public ContentResult Search([FromForm] string? search)
+    {
+        var forecasts = new List<WeatherForecast>();
+        if (string.IsNullOrEmpty(search))
+        {
+            forecasts = WeatherForecastDb.GetWeatherForecasts();
+
+        }else{
+            forecasts = WeatherForecastDb.SearchWeatherForecasts(search);
+        }
+
+        var html = "<div class='weather-forecasts'>";
+        foreach (var forecast in forecasts)
+        {
+            html += $"<div class='weather-forecast {(forecast.Selected ? "selected" : "")}' data-id='{forecast.Id}' " +
+                    $"hx-put='http://localhost:5146/weatherforecast/{forecast.Id}' " +
+                    $"hx-trigger='click' " +
+                    $"hx-swap='outerHTML'>" +
+                    $"<p class='date'>Date: {forecast.Date}</p>" +
+                    $"<p class='temp'>Temperature: {forecast.TemperatureC}°C</p>" +
+                    $"<p class='summary'>Summary: {forecast.Summary}</p>" +
+                    $"<p class='selected'>Selected: {forecast.Selected}</p>" +
+                    $"</div>";
+        }
+        html += "</div>";
+
+        return Content(html, "text/html");
+    }
 
 }
 
