@@ -25,6 +25,11 @@ public static class WeatherForecastDb
             WeatherForecasts[index] = forecast;
         }
     }
+    // Update the weather forecast list order
+    public static void UpdateWeatherForecast(List<WeatherForecast> forecasts)
+    {
+        WeatherForecasts = forecasts;
+    }
     public static void DeleteWeatherForecast(Guid id)
     {
         var index = WeatherForecasts.FindIndex(f => f.Id == id);
@@ -47,7 +52,7 @@ public static class WeatherForecastDb
     };
     public static void SeedWeatherForecasts()
     {
-        var forecasts = Enumerable.Range(1, 50).Select(index => new WeatherForecast
+        var forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
             Id = Guid.NewGuid(),
             Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
@@ -76,31 +81,67 @@ public static class WeatherForecastDb
             f.Selected.ToString().Contains(search)
         ).ToList();
     }
+    // Update the weather forecast list order
+    public static List<WeatherForecast> OrderWeatherForecasts(List<string> order, List<WeatherForecast> forecasts)
+    {
+        var orderedForecasts = new List<WeatherForecast>();
+        foreach (var id in order)
+        {
+            // var parts = id.Split('=');
+            // string forecastId = parts.Length > 1 ? parts[1] : parts[0];
+            // var forecast = forecasts.Find(f => f.Id.ToString() == forecastId);
+            var forecast = forecasts.Find(f => f.Id.ToString() == id);
+            if (forecast != null)
+            {
+                orderedForecasts.Add(forecast);
+            }
+        }
+        return orderedForecasts;
+    }
     
     public static string GetHTMLForForecast(List<WeatherForecast> forecasts)
     {
-        var html = "<div id='weather-forecasts' class='col rounded border border-1 p-3 m-3'>";
-        html += "<div class='row'>";
-        html = GetHTMLForecastLoop(forecasts);
-        html += "</div>";
+        var html = "<div id='weather-forecasts' class='col rounded border border-1 p-5 m-3 justify-content-center'>";
+        html += GetHTMLForecastLoop(forecasts);
         html += "</div>";
         return html;
     }
     public static string GetHTMLForecastLoop(List<WeatherForecast> forecasts)
     {
-        var html = "";
+        var html = $"<form class='sortable' "+
+                $"hx-post='http://localhost:5146/weatherforecast/order' " +
+                $"hx-trigger='end'> " +
+                $"<div class='htmx-indicator'>Loading...</div>";
         foreach (var forecast in forecasts)
         {
-            html += $"<div id='weather-forecast' class='m-3 p-3 rounded shadow {(forecast.Selected ? "bg-success" : "bg-secondary")}' data-id='{forecast.Id}'" +
+            html += "<div class='row m-1 p-3 border-1'>";
+            html += $"<div id='weather-forecast' class='pe-auto m-3 p-3 border-1 rounded shadow {(forecast.Selected ? "bg-success" : "bg-secondary")}' data-id='{forecast.Id}'" +
                     $"hx-put='http://localhost:5146/weatherforecast/{forecast.Id}' " +
                     $"hx-trigger='click' " +
                     $"hx-swap='outerHTML'>" +
-                    $"<p class='date'>Date: {forecast.Date}</p>" +
-                    $"<p class='temp'>Temperature: {forecast.TemperatureC}°C</p>" +
-                    $"<p class='summary'>Summary: {forecast.Summary}</p>" +
-                    $"<p class='selected'>Selected: {forecast.Selected}</p>" +
+                    $"<input type='hidden' name='Id' value='{forecast.Id}' />" +
+                    $"<p class='user-select-none'>Date: {forecast.Date}</p>" +
+                    $"<p class='user-select-none'>Temperature: {forecast.TemperatureC}°C</p>" +
+                    $"<p class='user-select-none'>Summary: {forecast.Summary}</p>" +
+                    $"<p class='user-select-none'>Selected: {forecast.Selected}</p>" +
                     $"</div>";
+            html += "</div>";
         }
+        html += "</form>";
+        return html;
+    }
+    public static string GetHTMLForecast(WeatherForecast forecast)
+    {
+        var html = $"<div id='weather-forecast' class='m-3 p-3 rounded shadow {(forecast.Selected ? "bg-success" : "bg-secondary")}' data-id='{forecast.Id}'" +
+                $"hx-put='http://localhost:5146/weatherforecast/{forecast.Id}' " +
+                $"hx-trigger='click' " +
+                $"hx-swap='outerHTML'>" +
+                $"<p class='date'>Date: {forecast.Date}</p>" +
+                $"<p class='temp'>Temperature: {forecast.TemperatureC}°C</p>" +
+                $"<p class='summary'>Summary: {forecast.Summary}</p>" +
+                $"<p class='selected'>Selected: {forecast.Selected}</p>" +
+                $"</div>";
+        html += "</div>";
         return html;
     }
 }

@@ -35,10 +35,31 @@ public class WeatherForecastController : ControllerBase
 
         WeatherForecastDb.UpdateWeatherForecast(existingForecast);
 
-        var updatedHtml = WeatherForecastDb.GetHTMLForecastLoop(new List<WeatherForecast> { existingForecast });
+        var updatedHtml = WeatherForecastDb.GetHTMLForecast( existingForecast );
 
         return Content(updatedHtml, "text/html");
     }
+    // Update the weather forecast list order
+    [HttpPost("order", Name = "OrderWeatherForecasts")]
+    public ContentResult Order([FromForm] List<string>? Id)
+    {
+        _logger.LogInformation("Received order: {Id}", string.Join(", ", Id));
+
+        var forecasts = WeatherForecastDb.GetWeatherForecasts();
+        if (Id == null || !Id.Any())
+        {
+            return Content("No order provided", "text/html");
+        }
+
+        var orderedForecasts = WeatherForecastDb.OrderWeatherForecasts(Id, forecasts);
+        
+        WeatherForecastDb.UpdateWeatherForecast(orderedForecasts);
+
+        var html = WeatherForecastDb.GetHTMLForecastLoop(orderedForecasts);
+
+        return Content(html, "text/html");
+    }
+
     // search for the weather forecast by any property
     [HttpPost("search", Name = "SearchWeatherForecasts")]
     public ContentResult Search([FromForm] string? search)
