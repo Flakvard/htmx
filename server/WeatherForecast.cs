@@ -50,6 +50,19 @@ public static class WeatherForecastDb
     {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
+    private static readonly Dictionary<string, string> SummariesDictToSvg = new()
+    {
+        { "Freezing", "/public/animated/snowy-6.svg" },
+        { "Bracing", "/public/animated/snowy-5.svg" },
+        { "Chilly", "/public/animated/snowy-4.svg" },
+        { "Cool", "/public/animated/snowy-1.svg" },
+        { "Mild", "/public/animated/cloudy.svg" },
+        { "Warm", "/public/animated/cloudy-day-1.svg" },
+        { "Balmy", "/public/animated/day.svg" },
+        { "Hot", "/public/animated/day.svg" },
+        { "Sweltering", "/public/animated/day.svg" },
+        { "Scorching", "/public/animated/day.svg" }
+    };
     public static void SeedWeatherForecasts()
     {
         var forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -116,32 +129,33 @@ public static class WeatherForecastDb
         foreach (var forecast in forecasts)
         {
             html += "<div class='row m-1 p-3 border-1'>";
-            html += $"<div id='weather-forecast' class='pe-auto m-3 p-3 border-1 rounded shadow {(forecast.Selected ? "bg-success" : "bg-secondary")}' data-id='{forecast.Id}'" +
-                    $"hx-put='http://localhost:5146/weatherforecast/{forecast.Id}' " +
-                    $"hx-trigger='click' " +
-                    $"hx-swap='outerHTML'>" +
-                    $"<input type='hidden' name='Id' value='{forecast.Id}' />" +
-                    $"<p class='user-select-none'>Date: {forecast.Date}</p>" +
-                    $"<p class='user-select-none'>Temperature: {forecast.TemperatureC}°C</p>" +
-                    $"<p class='user-select-none'>Summary: {forecast.Summary}</p>" +
-                    $"<p class='user-select-none'>Selected: {forecast.Selected}</p>" +
-                    $"</div>";
+            html += GetHTMLForecast(forecast);
             html += "</div>";
         }
         return html;
     }
     public static string GetHTMLForecast(WeatherForecast forecast)
     {
-        var html = $"<div id='weather-forecast' class='m-3 p-3 rounded shadow {(forecast.Selected ? "bg-success" : "bg-secondary")}' data-id='{forecast.Id}'" +
+        var svgPath = SummariesDictToSvg[forecast.Summary ?? ""];
+        var html = $"<div id='weather-forecast' class='pe-auto m-3 p-3' data-id='{forecast.Id}'" +
                 $"hx-put='http://localhost:5146/weatherforecast/{forecast.Id}' " +
                 $"hx-trigger='click' " +
                 $"hx-swap='outerHTML'>" +
-                $"<p class='date'>Date: {forecast.Date}</p>" +
-                $"<p class='temp'>Temperature: {forecast.TemperatureC}°C</p>" +
-                $"<p class='summary'>Summary: {forecast.Summary}</p>" +
-                $"<p class='selected'>Selected: {forecast.Selected}</p>" +
+                $"<input type='hidden' name='Id' value='{forecast.Id}' />" +
+                $"<div class='card text-center {(forecast.Selected ? "bg-primary"  : "bg-light")}'>" +
+                $"<div class='card-header'>" +
+                $"Weather Forecast for Date: {forecast.Date}" +
+                $"</div>" +
+                $"<div class='card-body'>" +
+                $"    <h5 class='card-title'>Temperature: {forecast.TemperatureC}°C</h5>" +
+                $"    <img src='{svgPath}' alt='Weather Icon' />" +
+                $"    <p class='card-text'>Summary: {forecast.Summary}</p>" +
+                $"</div>" +
+                $"<div class='card-footer text-muted'>" +
+                $"Selected: {forecast.Selected}" +
+                $"</div>" +
+                $"</div>" +
                 $"</div>";
-        html += "</div>";
         return html;
     }
 }
